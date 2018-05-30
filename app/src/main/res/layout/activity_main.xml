@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.test.heart.heartme.MainActivity">
+
+    <TextView
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Am I OK ?"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/test_name"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edittext_background"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:hint="@string/test_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+
+    <EditText
+        android:id="@+id/result"
+        android:background="@drawable/edittext_background"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:hint="@string/result"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+<TextView
+    android:background="@color/colorPrimary"
+    android:textColor="@android:color/white"
+    android:layout_marginTop="10dp"
+    android:id="@+id/submit"
+    android:layout_marginRight="25dp"
+    android:layout_marginLeft="25dp"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:text="@string/submit"
+    android:layout_height="40dp"/>
+
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/user_final"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="@string/submit"
+        android:layout_height="40dp"/>
+
+
+
+
+</LinearLayout>
