@@ -56,7 +56,8 @@ public class MainPresenter
             for(int i = 0; i < size; i++)
             {
                 JSONObject data = testConfig.getJSONObject(i);
-                mDataMap.put(data.getString("name"), data.getLong("threshold"));
+                String name = data.getString("name");
+                mDataMap.put(name.toUpperCase(), data.getLong("threshold"));
             }
         }
         catch (JSONException e)
