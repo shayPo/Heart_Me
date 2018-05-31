@@ -58,9 +58,9 @@ public class MainPresenter implements Response.ErrorListener, Response.Listener<
             {
                 JSONObject data = testConfig.getJSONObject(i);
                 String name = data.getString("name");
-                if(name.length() > 3)
+                if(name.contains(" "))
                 {
-                    name = (String) name.subSequence(0,3);
+                    name = (String) name.split(" ")[0];
                 }
                 mDataMap.put(name.toUpperCase(), data.getLong("threshold"));
             }
