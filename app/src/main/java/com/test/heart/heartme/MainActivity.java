@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPresenter = new MainPresenter();
-        mPresenter.init(this);
+        mPresenter.loadJSONData(this);
         mTestName = findViewById(R.id.test_name);
         mResult = findViewById(R.id.result);
         findViewById(R.id.submit).setOnClickListener(this);
@@ -32,26 +32,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         String testName = mTestName.getText().toString();
         String result = mResult.getText().toString();
-        int testResult = 3;
+        int testResult = 2;
         if (testName.equals("") || result.equals(""))
         {
             testResult = 2;
         }
         else
         {
-            testResult = mPresenter.Check(mTestName.getText().toString(), Long.parseLong(mResult.getText().toString()));
+            testResult = mPresenter.Check(testName, Long.parseLong(result));
         }
 
-        TextView userfinal = findViewById(R.id.user_final);
+        TextView userFinal = findViewById(R.id.user_final);
         if (testResult == 1)
         {
-            userfinal.setText("very Ok");
+            userFinal.setText("Good");
         } else if (testResult == 2)
         {
-            userfinal.setText(getString(R.string.unknown));
+            userFinal.setText(getString(R.string.unknown));
         } else if (testResult == 3)
         {
-            userfinal.setText("Bad");
+            userFinal.setText("Bad");
         }
     }
 }

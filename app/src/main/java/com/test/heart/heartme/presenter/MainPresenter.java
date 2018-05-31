@@ -2,19 +2,22 @@ package com.test.heart.heartme.presenter;
 
 import android.content.Context;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sahar on 30/05/2018.
  */
 
-public class MainPresenter
+public class MainPresenter implements Response.ErrorListener, Response.Listener<String>
 {
 
     private HashMap<String, Long> mDataMap = new HashMap<>();
@@ -24,30 +27,17 @@ public class MainPresenter
 
     }
 
-    public String loadJSONFromAsset(Context context)
+    public void loadJSONData(Context context)
     {
-        String json = null;
-        try
-        {
-            InputStream is = context.getAssets().open("bloodTestConfig.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-            return null;
-        }
-
-        return json;
+        VolleyPresenter volleyPresenter = new VolleyPresenter(context);
+        String url = "https://s3.amazonaws.com/s3.helloheart.home.assignment/bloodTestConfig.json";
+        StringRequest stringRequest = new StringRequest( url,this, this);
+        volleyPresenter.addRequest(stringRequest);
     }
 
-    public void init(Context context)
+
+    public void init(String jsonData)
     {
-        String jsonData = loadJSONFromAsset(context);
         try
         {
             JSONObject allData =  new JSONObject(jsonData);
@@ -57,6 +47,10 @@ public class MainPresenter
             {
                 JSONObject data = testConfig.getJSONObject(i);
                 String name = data.getString("name");
+                if(name.length() > 3)
+                {
+                    name = (String) name.subSequence(0,3);
+                }
                 mDataMap.put(name.toUpperCase(), data.getLong("threshold"));
             }
         }
@@ -73,7 +67,16 @@ public class MainPresenter
     public int Check(String name, long result)
     {
         name = name.toUpperCase();
-        if(mDataMap.containsKey(name))
+        boolean contains = false;
+        for (Map.Entry<String, Long> e : mDataMap.entrySet()) {
+            if (name.contains(e.getKey())) {
+                name = e.getKey();
+                contains = true;
+                break;
+            }
+        }
+
+        if(contains)
         {
             long testThreshold = mDataMap.get(name);
             return testThreshold < result ? 3 : 1;
@@ -82,5 +85,17 @@ public class MainPresenter
         {
              return UNKNOWN;
         }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error)
+    {
+
+    }
+
+    @Override
+    public void onResponse(String response)
+    {
+        init(response);
     }
 }
