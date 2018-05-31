@@ -20,11 +20,22 @@ import java.util.Map;
 public class MainPresenter implements Response.ErrorListener, Response.Listener<String>
 {
 
+    public final int OK = 1;
+    public final int UNKNOWN = 2;
+    public final int BAD = 3;
+
     private HashMap<String, Long> mDataMap = new HashMap<>();
+    private ActivityListener mListener;
 
-    public MainPresenter()
+    public MainPresenter(ActivityListener listener)
     {
+        mListener = listener;
+    }
 
+    public void onDestroy()
+    {
+        mListener = null;
+        mDataMap = null;
     }
 
     public void loadJSONData(Context context)
@@ -36,7 +47,7 @@ public class MainPresenter implements Response.ErrorListener, Response.Listener<
     }
 
 
-    public void init(String jsonData)
+    private void init(String jsonData)
     {
         try
         {
@@ -59,10 +70,6 @@ public class MainPresenter implements Response.ErrorListener, Response.Listener<
             e.printStackTrace();
         }
     }
-
-    public final int OK = 1;
-    public final int UNKNOWN = 2;
-    public final int BAD = 3;
 
     public int Check(String name, long result)
     {
@@ -90,7 +97,7 @@ public class MainPresenter implements Response.ErrorListener, Response.Listener<
     @Override
     public void onErrorResponse(VolleyError error)
     {
-
+        mListener.onError();
     }
 
     @Override

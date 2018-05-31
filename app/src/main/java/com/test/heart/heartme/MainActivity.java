@@ -1,14 +1,17 @@
 package com.test.heart.heartme;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.test.heart.heartme.presenter.ActivityListener;
 import com.test.heart.heartme.presenter.MainPresenter;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ActivityListener
 {
 
     private MainPresenter mPresenter;
@@ -20,11 +23,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mPresenter = new MainPresenter();
-        mPresenter.loadJSONData(this);
+        mPresenter = new MainPresenter(this);
+        loadData();
         mTestName = findViewById(R.id.test_name);
         mResult = findViewById(R.id.result);
         findViewById(R.id.submit).setOnClickListener(this);
+    }
+
+    private void loadData()
+    {
+        mPresenter.loadJSONData(this);
     }
 
     @Override
@@ -53,6 +61,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             userFinal.setText("Bad");
         }
+    }
+
+    @Override
+    public void onError()
+    {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("there was an error in the network request, try again ?");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        loadData();
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //exit the app if the user clicks 'no' for data
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 }
 
